@@ -57,6 +57,15 @@ class CategoryResource extends Resource
                                                 ->default(true)
                                                 ->inline(false)
                                                 ->columnSpan(2),
+
+                                            Select::make('Categories')
+                                                ->multiple()
+                                                ->options([
+                                                    'tailwind' => 'Tailwind CSS',
+                                                    'alpine' => 'Alpine.js',
+                                                    'laravel' => 'Laravel',
+                                                    'livewire' => 'Laravel Livewire',
+                                                ])->columnSpan(12)
                                         ])->columns(12),
                                 ]),
                             Section::make('Category Advice')
@@ -78,10 +87,15 @@ class CategoryResource extends Resource
                     Section::make('SEO info')
                         // ->description('Prevent abuse by limiting the number of requests per period')
                         ->schema([
-                            TextInput::make('title'),
+                            TextInput::make('title')
+                                ->hint(fn ($state, $component) => $component->getMaxLength() - strlen($state) . ' / ' . $component->getMaxLength())
+                                ->maxLength(60)
+                                ->reactive(),
                             TextInput::make('slug'),
                             Textarea::make('meta_description')
-                                ->maxLength(160),
+                                ->hint(fn ($state, $component) => $component->getMaxLength() - strlen($state) . ' / ' . $component->getMaxLength())
+                                ->maxLength(160)
+                                ->reactive(),
                             MarkdownEditor::make('full_description')
                         ])->columnSpan(6)
 
