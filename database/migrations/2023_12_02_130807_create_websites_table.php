@@ -27,8 +27,7 @@ return new class extends Migration
             $table->text('full_description')->nullable();
 
             // OTHERS DATA
-            $table->boolean('active')->default(0);
-            $table->integer('hits')->default(1);
+            $table->boolean('disabled')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -18,9 +18,12 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Illuminate\Support\Str;
-use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Fieldset;
 
-use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Builder;
+
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CategoryResource extends Resource
@@ -31,40 +34,24 @@ class CategoryResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-
-            ->schema([
-                TextInput::make('name'),
-
-                // SEO DATA
-                TextInput::make('title')
-                    ->live()
-                    ->afterStateUpdated(function (Get $get, Set $set, ?string $old, ?string $state) {
-                        if (($get('slug') ?? '') !== Str::slug($old)) {
-                            return;
-                        }
-
-                        $set('slug', Str::slug($state));
-                    }),
-                TextInput::make('slug'),
-
-                TextArea::make('meta_description'),
-                RichEditor::make('full_description'),
-
-                // ADVISE
-                Select::make('message_type')
-                    ->options([
-                        'draft' => 'Draft',
-                        'reviewing' => 'Reviewing',
-                        'published' => 'Published',
-                    ]),
-                TextInput::make('message_text'),
-
-                // OTHERS DATA
-                Toggle::make('active')
-                    ->onColor('success')
-                    ->offColor('danger'),
-            ]);
+        return $form->schema([
+            Section::make('Category info')
+                ->schema([
+                    Section::make('Category info')
+                        ->schema([
+                            Section::make('Category info')
+                                ->description('Prevent abuse by limiting the number of requests per period')
+                                ->schema([
+                                    TextInput::make('name')
+                                ])
+                        ])->columnSpan(6),
+                    Section::make('Category info')
+                        ->description('Prevent abuse by limiting the number of requests per period')
+                        ->schema([
+                            TextInput::make('name')
+                        ])->columnSpan(6)
+                ])->columns(12)
+        ]);
     }
 
     public static function table(Table $table): Table
