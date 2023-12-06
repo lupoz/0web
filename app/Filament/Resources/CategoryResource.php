@@ -19,10 +19,13 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Illuminate\Support\Str;
 use Filament\Forms\Components\Fieldset;
-
+use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Builder;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Radio;
+
 
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -35,21 +38,53 @@ class CategoryResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Section::make('Category info')
+            Grid::make()
                 ->schema([
-                    Section::make('Category info')
+
+                    // FIRST COLUMN
+                    Grid::make('Category info')
+                        // ->description('Prevent abuse by limiting the number of requests per period')
                         ->schema([
                             Section::make('Category info')
-                                ->description('Prevent abuse by limiting the number of requests per period')
+                                //  ->description('Prevent abuse by limiting the number of requests per period')
                                 ->schema([
-                                    TextInput::make('name')
-                                ])
+                                    Grid::make()
+                                        ->schema([
+                                            TextInput::make('name')->columnSpan(10),
+                                            Toggle::make('active')
+                                                ->onColor('success')
+                                                ->offColor('danger')
+                                                ->default(true)
+                                                ->inline(false)
+                                                ->columnSpan(2),
+                                        ])->columns(12),
+                                ]),
+                            Section::make('Category Advice')
+                                //  ->description('Prevent abuse by limiting the number of requests per period')
+                                ->schema([
+                                    Radio::make('message_type')->options([
+                                        'draft' => 'Draft',
+                                        'scheduled' => 'Scheduled',
+                                        'published' => 'Published'
+                                    ])
+                                        ->inline()
+                                        ->inlineLabel(false)
+                                        ->columnSpan(12),
+                                    Textarea::make('message_text')->columnSpan(12)
+                                ])->columns(12)
                         ])->columnSpan(6),
-                    Section::make('Category info')
-                        ->description('Prevent abuse by limiting the number of requests per period')
+
+                    // SECOND COLUMN
+                    Section::make('SEO info')
+                        // ->description('Prevent abuse by limiting the number of requests per period')
                         ->schema([
-                            TextInput::make('name')
+                            TextInput::make('title'),
+                            TextInput::make('slug'),
+                            Textarea::make('meta_description')
+                                ->maxLength(160),
+                            MarkdownEditor::make('full_description')
                         ])->columnSpan(6)
+
                 ])->columns(12)
         ]);
     }
