@@ -28,7 +28,7 @@ return new class extends Migration
             $table->text('message_text')->nullable();
 
             // OTHERS DATA
-            $table->boolean('disabled')->default(0);
+            $table->boolean('is_active')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

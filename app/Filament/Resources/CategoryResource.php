@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use Closure;
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Filament\Resources\CategoryResource\RelationManagers;
 use App\Models\Category;
@@ -26,7 +27,8 @@ use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Radio;
 
-
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CategoryResource extends Resource
@@ -50,7 +52,18 @@ class CategoryResource extends Resource
                                 ->schema([
                                     Grid::make()
                                         ->schema([
-                                            TextInput::make('name')->columnSpan(10),
+
+                                            TextInput::make('name')
+                                                ->columnSpan(10)
+                                                ->required()
+                                                ->placeholder('Gaming')
+                                                ->live()
+                                                ->afterStateUpdated(fn ($state, callable $set) => [
+                                                    $set('title', 'Migliori siti di ' . $state),
+                                                    $set('slug', Str::slug('Migliori siti di ' . $state))
+                                                ])
+                                                ->debounce(900),
+
                                             Toggle::make('active')
                                                 ->onColor('success')
                                                 ->offColor('danger')
@@ -65,38 +78,56 @@ class CategoryResource extends Resource
                                                     'alpine' => 'Alpine.js',
                                                     'laravel' => 'Laravel',
                                                     'livewire' => 'Laravel Livewire',
-                                                ])->columnSpan(12)
+                                                ])->columnSpan(12),
+
+                                            MarkdownEditor::make('full_description')->columnSpan(12)
+
                                         ])->columns(12),
                                 ]),
-                            Section::make('Category Advice')
-                                //  ->description('Prevent abuse by limiting the number of requests per period')
-                                ->schema([
-                                    Radio::make('message_type')->options([
-                                        'draft' => 'Draft',
-                                        'scheduled' => 'Scheduled',
-                                        'published' => 'Published'
-                                    ])
-                                        ->inline()
-                                        ->inlineLabel(false)
-                                        ->columnSpan(12),
-                                    Textarea::make('message_text')->columnSpan(12)
-                                ])->columns(12)
+
                         ])->columnSpan(6),
 
                     // SECOND COLUMN
-                    Section::make('SEO info')
-                        // ->description('Prevent abuse by limiting the number of requests per period')
+                    Grid::make()
                         ->schema([
-                            TextInput::make('title')
-                                ->hint(fn ($state, $component) => $component->getMaxLength() - strlen($state) . ' / ' . $component->getMaxLength())
-                                ->maxLength(60)
-                                ->reactive(),
-                            TextInput::make('slug'),
-                            Textarea::make('meta_description')
-                                ->hint(fn ($state, $component) => $component->getMaxLength() - strlen($state) . ' / ' . $component->getMaxLength())
-                                ->maxLength(160)
-                                ->reactive(),
-                            MarkdownEditor::make('full_description')
+                            Section::make('SEO info')
+                                // ->description('Prevent abuse by limiting the number of requests per period')
+                                ->schema([
+
+                                    TextInput::make('title')
+                                        ->maxLength(60)
+                                        ->placeholder('Migliori si di Gaming')
+                                        ->hint(fn ($state, $component) => $component->getMaxLength() - strlen($state) . ' / ' . $component->getMaxLength())->reactive(),
+
+                                    TextInput::make('slug')
+                                        ->placeholder('migliori-siti-gaming')
+                                        ->required(),
+
+                                    Textarea::make('meta_description')
+                                        ->hint(fn ($state, $component) => $component->getMaxLength() - strlen($state) . ' / ' . $component->getMaxLength())
+                                        ->maxLength(160)
+                                        ->reactive(),
+                                ])->columnSpan(6),
+
+                            Section::make('Category Advice')
+                                //  ->description('Prevent abuse by limiting the number of requests per period')
+                                ->schema([
+
+                                    Radio::make('message_type')
+                                        ->options([
+                                            'draft' => 'Draft',
+                                            'scheduled' => 'Scheduled',
+                                            'published' => 'Published'
+                                        ])
+                                        ->inline()
+                                        ->inlineLabel(false)
+                                        ->columnSpan(12),
+
+                                    Textarea::make('message_text')
+                                        ->placeholder('Danger, warning, or informational advice...')
+                                        ->columnSpan(12)
+
+                                ])->columnSpan(6)
                         ])->columnSpan(6)
 
                 ])->columns(12)
@@ -107,7 +138,9 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('name'),
+                IconColumn::make('is_active')
+                    ->boolean(),
             ])
             ->filters([
                 //
