@@ -213,16 +213,16 @@
         },
         {
             "name": "codewithdennis/filament-select-tree",
-            "version": "v3.1.14",
+            "version": "v3.1.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CodeWithDennis/filament-select-tree.git",
-                "reference": "f962d1387a60183821055d8f9fa2714fc8941f35"
+                "reference": "1a57c972a8a602661fc72efcec25b8b9a8f4e04a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CodeWithDennis/filament-select-tree/zipball/f962d1387a60183821055d8f9fa2714fc8941f35",
-                "reference": "f962d1387a60183821055d8f9fa2714fc8941f35",
+                "url": "https://api.github.com/repos/CodeWithDennis/filament-select-tree/zipball/1a57c972a8a602661fc72efcec25b8b9a8f4e04a",
+                "reference": "1a57c972a8a602661fc72efcec25b8b9a8f4e04a",
                 "shasum": ""
             },
             "require": {
@@ -280,7 +280,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-11-29T09:10:36+00:00"
+            "time": "2023-12-12T16:56:05+00:00"
         },
         {
             "name": "danharrin/date-format-converter",

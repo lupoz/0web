@@ -3,8 +3,16 @@
 namespace App\Filament\Resources;
 
 use Closure;
+
+
+use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\Actions\CreateAction;
+use CodeWithDennis\FilamentSelectTree\SelectTree;
+
+
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Filament\Resources\CategoryResource\RelationManagers;
+use App\Http\Controllers\ChatGPT;
 use App\Models\Category;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -20,7 +28,6 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Illuminate\Support\Str;
 use Filament\Forms\Components\Fieldset;
-use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Builder;
@@ -54,15 +61,22 @@ class CategoryResource extends Resource
                                         ->schema([
 
                                             TextInput::make('name')
-                                                ->columnSpan(10)
                                                 ->required()
                                                 ->placeholder('Gaming')
-                                                ->live()
-                                                ->afterStateUpdated(fn ($state, callable $set) => [
-                                                    $set('title', 'Migliori siti di ' . $state),
-                                                    $set('slug', Str::slug('Migliori siti di ' . $state))
-                                                ])
-                                                ->debounce(900),
+                                                // ->afterStateUpdated(fn ($state, callable $set) => [
+                                                //     $set('title', 'Migliori siti di ' . $state),
+                                                //     $set('slug', Str::slug('Migliori siti di ' . $state)),
+                                                // ])
+                                                // ->afterStateUpdated(fn ($state, callable $ChatGPT) => [
+                                                //     $ChatGPT('full_description', $ChatGPT($state)),
+                                                // ])
+                                                ->lazy()
+                                                ->suffixAction(
+                                                    Action::make('UpDate fields')                           
+                                                        ->icon('heroicon-m-cube-transparent')
+                                                        //->url(fn (): string => route('ChatGPT', ['post' => $state]))
+                                                )
+                                                ->columnSpan(10),
 
                                             Toggle::make('active')
                                                 ->onColor('success')
@@ -71,14 +85,10 @@ class CategoryResource extends Resource
                                                 ->inline(false)
                                                 ->columnSpan(2),
 
-                                            Select::make('Categories')
-                                                ->multiple()
-                                                ->options([
-                                                    'tailwind' => 'Tailwind CSS',
-                                                    'alpine' => 'Alpine.js',
-                                                    'laravel' => 'Laravel',
-                                                    'livewire' => 'Laravel Livewire',
-                                                ])->columnSpan(12),
+                            // SelectTree::make('categories')
+                            // ->relationship('categories', 'name', 'parent_id', function ($query) {
+                            //     return $query;
+                            // }),
 
                                             MarkdownEditor::make('full_description')->columnSpan(12)
 
@@ -96,7 +106,7 @@ class CategoryResource extends Resource
 
                                     TextInput::make('title')
                                         ->maxLength(60)
-                                        ->placeholder('Migliori si di Gaming')
+                                        ->placeholder('Migliori siti di Gaming')
                                         ->hint(fn ($state, $component) => $component->getMaxLength() - strlen($state) . ' / ' . $component->getMaxLength())->reactive(),
 
                                     TextInput::make('slug')
@@ -148,6 +158,7 @@ class CategoryResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
+
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -158,7 +169,7 @@ class CategoryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+//
         ];
     }
 
