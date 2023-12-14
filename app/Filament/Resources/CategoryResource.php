@@ -63,18 +63,10 @@ class CategoryResource extends Resource
                                             TextInput::make('name')
                                                 ->required()
                                                 ->placeholder('Gaming')
-                                                // ->afterStateUpdated(fn ($state, callable $set) => [
-                                                //     $set('title', 'Migliori siti di ' . $state),
-                                                //     $set('slug', Str::slug('Migliori siti di ' . $state)),
-                                                // ])
-                                                // ->afterStateUpdated(fn ($state, callable $ChatGPT) => [
-                                                //     $ChatGPT('full_description', $ChatGPT($state)),
-                                                // ])
                                                 ->lazy()
                                                 ->suffixAction(
-                                                    Action::make('UpDate fields')                           
+                                                    Action::make('UpDate fields')
                                                         ->icon('heroicon-m-cube-transparent')
-                                                        //->url(fn (): string => route('ChatGPT', ['post' => $state]))
                                                 )->id("name")
                                                 ->columnSpan(10),
 
@@ -84,11 +76,6 @@ class CategoryResource extends Resource
                                                 ->default(true)
                                                 ->inline(false)
                                                 ->columnSpan(2),
-
-                            // SelectTree::make('categories')
-                            // ->relationship('categories', 'name', 'parent_id', function ($query) {
-                            //     return $query;
-                            // }),
 
                                             MarkdownEditor::make('full_description')->id('full_description')->columnSpan(12)
 
@@ -118,7 +105,8 @@ class CategoryResource extends Resource
                                     Textarea::make('meta_description')
                                         ->hint(fn ($state, $component) => $component->getMaxLength() - strlen($state) . ' / ' . $component->getMaxLength())
                                         ->maxLength(160)
-                                        ->reactive(),
+                                        ->reactive()
+                                        ->extraAttributes(['class' => 'meta_description']),
                                 ])->columnSpan(6),
 
                             Section::make('Category Advice')
@@ -171,7 +159,7 @@ class CategoryResource extends Resource
     public static function getRelations(): array
     {
         return [
-//
+            //
         ];
     }
 

@@ -22,7 +22,7 @@ class ChatGPT extends Controller
             $message = "Crea una metadescription ottimizzata SEO, di 160 caratteri, su una selezione dei migliori siti che parlano di: ";
 
             if (null !== $request->post('description') && $request->post('description') == 'full' ) {
-                $message = "Crea una description ottimizzata SEO, di 160 caratteri, su una selezione dei migliori siti che parlano di: ";
+                $message = "Crea una description ottimizzata SEO su una selezione dei migliori siti che parlano di: ";
             }
             /** @var array $response */
             $response = Http::withHeaders([
