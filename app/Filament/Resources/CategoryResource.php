@@ -75,7 +75,7 @@ class CategoryResource extends Resource
                                                     Action::make('UpDate fields')                           
                                                         ->icon('heroicon-m-cube-transparent')
                                                         //->url(fn (): string => route('ChatGPT', ['post' => $state]))
-                                                )
+                                                )->id("name")
                                                 ->columnSpan(10),
 
                                             Toggle::make('active')
@@ -90,7 +90,7 @@ class CategoryResource extends Resource
                             //     return $query;
                             // }),
 
-                                            MarkdownEditor::make('full_description')->columnSpan(12)
+                                            MarkdownEditor::make('full_description')->id('full_description')->columnSpan(12)
 
                                         ])->columns(12),
                                 ]),
@@ -106,10 +106,12 @@ class CategoryResource extends Resource
 
                                     TextInput::make('title')
                                         ->maxLength(60)
+                                        ->id("title")
                                         ->placeholder('Migliori siti di Gaming')
                                         ->hint(fn ($state, $component) => $component->getMaxLength() - strlen($state) . ' / ' . $component->getMaxLength())->reactive(),
 
                                     TextInput::make('slug')
+                                        ->id("slug")
                                         ->placeholder('migliori-siti-gaming')
                                         ->required(),
 
